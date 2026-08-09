@@ -1,0 +1,28 @@
+[Unit]
+Description=Configured MetaTrader 5 terminal under Wine
+After=alma-mt5-bridge.service
+Requires=alma-mt5-bridge.service
+ConditionPathExists=/root/.wine-alma/drive_c/Program Files/MetaTrader 5/terminal64.exe
+
+[Service]
+Type=simple
+Environment=WINEPREFIX=/root/.wine-alma
+Environment=WINEARCH=win64
+Environment=WINEDLLOVERRIDES=mscoree,mshtml=
+Environment=WINEDEBUG=-all
+ExecStartPre=/root/alma/.venv/bin/python -m alma.mt5_demo_login --account-config /root/.config/alma/mt5-account.conf --write-startup /root/.config/alma/mt5-startup.ini
+ExecStart=/usr/bin/xvfb-run -a /opt/wine-stable/bin/wine "/root/.wine-alma/drive_c/Program Files/MetaTrader 5/terminal64.exe" /portable "/config:Z:\\root\\.config\\alma\\mt5-startup.ini"
+ExecStop=/opt/wine-stable/bin/wineserver -k
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=60
+LimitNOFILE=65536
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/.wine-alma /root/.config/alma
+
+[Install]
+WantedBy=multi-user.target

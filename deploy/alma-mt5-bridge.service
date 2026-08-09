@@ -1,0 +1,22 @@
+[Unit]
+Description=ALMA MT5 localhost bridge
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/alma
+EnvironmentFile=/root/.config/alma/mt5-account.conf
+ExecStart=/root/alma/.venv/bin/python -m alma.mt5_runtime --database /root/alma/var/alma.db --port 8765 --secret /root/.config/alma/mt5-bridge.secret --ipc-directory "/root/.wine-alma/drive_c/users/root/AppData/Roaming/MetaQuotes/Terminal/Common/Files/ALMA/${ALMA_MT5_TERMINAL_ID}" --terminal-id ${ALMA_MT5_TERMINAL_ID}
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=30
+LimitNOFILE=65536
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/alma/var /root/.config/alma /root/.wine-alma/drive_c/users/root/AppData/Roaming/MetaQuotes/Terminal/Common/Files/ALMA
+
+[Install]
+WantedBy=multi-user.target

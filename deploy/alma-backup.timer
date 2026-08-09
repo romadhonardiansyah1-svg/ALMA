@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily ALMA verified backup
+
+[Timer]
+OnCalendar=*-*-* 03:15:00 UTC
+Persistent=true
+RandomizedDelaySec=15m
+Unit=alma-backup.service
+
+[Install]
+WantedBy=timers.target

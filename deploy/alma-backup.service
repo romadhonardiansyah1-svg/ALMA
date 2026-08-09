@@ -1,0 +1,17 @@
+[Unit]
+Description=ALMA verified SQLite backup and Parquet manifest
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/alma
+ExecStart=/root/alma/.venv/bin/python -m alma.operations backup --database /root/alma/var/alma.db --output /root/alma/var/backups --retain 14
+ExecStart=/root/alma/.venv/bin/python -m alma.operations manifest --root /root/alma/var/data --output /root/alma/var/parquet-manifest.json
+ExecStart=/root/alma/.venv/bin/python -m alma.operations verify-manifest --root /root/alma/var/data /root/alma/var/parquet-manifest.json
+UMask=0077
+Nice=10
+IOSchedulingClass=idle
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/alma/var

@@ -1,0 +1,12 @@
+[Unit]
+Description=ALMA operational health gate
+
+[Service]
+Type=oneshot
+WorkingDirectory=/root/alma
+EnvironmentFile=/root/.config/alma/mt5-account.conf
+ExecStart=/root/alma/.venv/bin/python -m alma.operations health --database /root/alma/var/alma.db --data-root /root/alma/var --router-url http://127.0.0.1:20128/api/health --runtime-status /root/alma/var/runtime-status.json --mt5-terminal-id ${ALMA_MT5_TERMINAL_ID}
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only

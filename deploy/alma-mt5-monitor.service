@@ -1,0 +1,21 @@
+[Unit]
+Description=ALMA continuous MT5 health monitor
+After=alma-mt5-bridge.service
+Requires=alma-mt5-bridge.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/alma
+EnvironmentFile=/root/.config/alma/mt5-account.conf
+ExecStart=/root/alma/.venv/bin/python -m alma.mt5_soak --database /root/alma/var/alma.db --evidence /root/alma/var/mt5-monitor.json --duration 0 --interval 60 --max-age 5
+Restart=always
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/alma/var
+
+[Install]
+WantedBy=multi-user.target

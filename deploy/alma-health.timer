@@ -1,0 +1,11 @@
+[Unit]
+Description=Run ALMA operational health gate
+
+[Timer]
+OnBootSec=2m
+OnUnitActiveSec=1m
+AccuracySec=10s
+Unit=alma-health.service
+
+[Install]
+WantedBy=timers.target

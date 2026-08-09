@@ -1,0 +1,27 @@
+[Unit]
+Description=ALMA configured Binance and MT5 execution runtime
+After=network-online.target alma-mt5-bridge.service alma-mt5-wine.service
+Wants=network-online.target alma-mt5-bridge.service alma-mt5-wine.service
+
+[Service]
+Type=simple
+WorkingDirectory=/root/alma
+EnvironmentFile=/root/.config/alma/mt5-account.conf
+EnvironmentFile=-/root/.config/alma/binance-account.conf
+EnvironmentFile=-/root/.config/alma/binance-credentials.conf
+EnvironmentFile=/root/.config/alma/9router.conf
+ExecStart=/root/alma/.venv/bin/python -m alma.runtime --database /root/alma/var/alma.db --status /root/alma/var/runtime-status.json --router-url http://127.0.0.1:20128 --model stepfun/step-3.7-flash
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=45
+LimitNOFILE=65536
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/root/alma/var
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+
+[Install]
+WantedBy=multi-user.target
